@@ -13,6 +13,7 @@ class Product extends Model
 
     protected $table = 'products';
     protected $primaryKey = 'id';
+
     protected $fillable = [
         'product_code',
         'product_name',
@@ -20,6 +21,8 @@ class Product extends Model
         'product_purpose',
         'product_quantity',
         'product_price',
+        'selling_price',
+        'purchase_price',
         'product_expiration_date',
         'last_updated_by'
     ];
@@ -39,5 +42,21 @@ class Product extends Model
         return LogOptions::defaults()
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
+    }
+
+    /**
+     * Get selling price (harga jual) with fallback to product_price
+     */
+    public function getSellingPriceAttribute()
+    {
+        return $this->attributes['selling_price'] ?? $this->product_price;
+    }
+
+    /**
+     * Get purchase price (harga beli) with fallback
+     */
+    public function getPurchasePriceAttribute()
+    {
+        return $this->attributes['purchase_price'] ?? $this->product_price;
     }
 }
