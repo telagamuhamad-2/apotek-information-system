@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductIncomingExport;
 use App\Services\ProductIncomingService;
 use App\Services\ProductTypeService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductIncomingController extends Controller
 {
@@ -75,6 +78,7 @@ class ProductIncomingController extends Controller
             'product_quantity' => 'required|integer|min:1',
             'product_each_price' => 'required|numeric|min:0',
             'vendor_name' => 'required|string|max:255',
+            'product_expiration_date' => 'nullable|date',
         ]);
 
         // Calculate total price
@@ -124,6 +128,7 @@ class ProductIncomingController extends Controller
             'product_quantity' => 'required|integer|min:1',
             'product_each_price' => 'required|numeric|min:0',
             'vendor_name' => 'required|string|max:255',
+            'product_expiration_date' => 'nullable|date',
         ]);
 
         // Calculate total price
@@ -159,5 +164,25 @@ class ProductIncomingController extends Controller
                 ->route('pembelian.index')
                 ->with('error', 'Gagal menghapus data pembelian: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Export product incomings to Excel.
+     */
+    public function export(Request $request): BinaryFileResponse
+    {
+        $filters = $request->only([
+            'search',
+            'product_type_id',
+            'date_from',
+            'date_to',
+            'min_price',
+            'max_price',
+            'vendor_name',
+        ]);
+
+        $fileName = 'pembelian-obat-' . now()->format('Y-m-d-His') . '.xlsx';
+
+        return Excel::download(new ProductIncomingExport($filters), $fileName);
     }
 }

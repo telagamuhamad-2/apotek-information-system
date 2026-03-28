@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductOutgoingExport;
 use App\Services\ProductOutgoingService;
 use App\Services\ProductTypeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductOutgoingController extends Controller
 {
@@ -74,7 +77,7 @@ class ProductOutgoingController extends Controller
                     'name' => $product->product_name,
                     'type_id' => $product->product_type_id,
                     'purpose' => $product->product_purpose,
-                    'price' => $product->product_price,
+                    'price' => $product->selling_price ?? 0,
                     'stock' => $product->product_quantity,
                     'type_name' => $product->productType ? $product->productType->product_type_name : '',
                 ]
@@ -123,8 +126,7 @@ class ProductOutgoingController extends Controller
     {
         $validated = $request->validate([
             'product_code' => 'required|string|max:50',
-            'product_quantity' => 'required|integer|min:1',
-            'customer_name' => 'required|string|max:255',
+            'product_quantity' => 'required|integer|min:1'
         ]);
 
         try {
@@ -166,8 +168,7 @@ class ProductOutgoingController extends Controller
         $validated = $request->validate([
             'product_code' => 'required|string|max:50',
             'product_quantity' => 'required|integer|min:1',
-            'product_each_price' => 'required|numeric|min:0',
-            'customer_name' => 'required|string|max:255',
+            'product_each_price' => 'required|numeric|min:0'
         ]);
 
         // Calculate total price
@@ -203,5 +204,24 @@ class ProductOutgoingController extends Controller
                 ->route('penjualan.index')
                 ->with('error', 'Gagal menghapus data penjualan: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Export product outgoings to Excel.
+     */
+    public function export(Request $request): BinaryFileResponse
+    {
+        $filters = $request->only([
+            'search',
+            'product_type_id',
+            'date_from',
+            'date_to',
+            'min_price',
+            'max_price',
+        ]);
+
+        $fileName = 'penjualan-obat-' . now()->format('Y-m-d-His') . '.xlsx';
+
+        return Excel::download(new ProductOutgoingExport($filters), $fileName);
     }
 }

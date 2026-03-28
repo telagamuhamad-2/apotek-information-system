@@ -16,10 +16,16 @@
                     <p class="text-sm text-gray-500 mt-1">Menggunakan harga jual dari menu Stok</p>
                 </div>
             </div>
-            <a href="{{ route('penjualan.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
-                <i class="fas fa-plus mr-2"></i>Buat Penjualan
-            </a>
+            <div class="flex gap-2">
+                <a href="{{ route('penjualan.export', request()->query()) }}"
+                   class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-file-excel mr-2"></i>Export Excel
+                </a>
+                <a href="{{ route('penjualan.create') }}"
+                   class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Buat Penjualan
+                </a>
+            </div>
         </div>
 
         <!-- Filters -->
@@ -64,7 +70,6 @@
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Obat</th>
-                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pelanggan</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Jual/Pcs</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Jual</th>
@@ -84,11 +89,6 @@
                                 <p class="text-sm font-medium text-gray-900">{{ $sale->product_name }}</p>
                                 <p class="text-xs text-gray-500">{{ $sale->product_code ?? '-' }}</p>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                                {{ $sale->customer_name }}
-                            </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ $sale->product_quantity }} pcs

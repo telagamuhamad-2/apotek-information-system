@@ -24,7 +24,8 @@ class Product extends Model
         'selling_price',
         'purchase_price',
         'product_expiration_date',
-        'last_updated_by'
+        'last_updated_by',
+        'vendor_name'
     ];
 
     public function user()

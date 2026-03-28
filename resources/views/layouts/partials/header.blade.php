@@ -16,12 +16,6 @@
                 {{ now()->format('l, d F Y') }}
             </div>
 
-            <!-- Notifications -->
-            <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full">
-                <i class="fas fa-bell"></i>
-                <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
-            </button>
-
             <!-- User Menu -->
             <div class="flex items-center space-x-3">
                 <div class="hidden sm:block text-right">

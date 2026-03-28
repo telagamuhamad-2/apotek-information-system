@@ -16,10 +16,16 @@
                     <p class="text-sm text-gray-500 mt-1">Harga beli (modal) terpisah dari harga jual</p>
                 </div>
             </div>
-            <a href="{{ route('pembelian.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
-                <i class="fas fa-plus mr-2"></i>Tambah Pembelian
-            </a>
+            <div class="flex gap-2">
+                <a href="{{ route('pembelian.export', request()->query()) }}"
+                   class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-file-excel mr-2"></i>Export Excel
+                </a>
+                <a href="{{ route('pembelian.create') }}"
+                   class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Tambah Pembelian
+                </a>
+            </div>
         </div>
 
         <!-- Filters -->

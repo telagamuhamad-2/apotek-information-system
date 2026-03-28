@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ProductExport;
 use App\Services\ProductService;
 use App\Services\ProductTypeService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class ProductController extends Controller
 {
@@ -194,5 +197,28 @@ class ProductController extends Controller
                 ->route('products.index')
                 ->with('error', 'Gagal menghapus obat: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Export products to Excel.
+     */
+    public function export(Request $request): BinaryFileResponse
+    {
+        $filters = $request->only([
+            'search',
+            'product_type_id',
+            'expiration_from',
+            'expiration_to',
+            'min_quantity',
+            'max_quantity',
+            'min_price',
+            'max_price',
+            'low_stock',
+            'expired',
+        ]);
+
+        $fileName = 'stok-obat-' . now()->format('Y-m-d-His') . '.xlsx';
+
+        return Excel::download(new ProductExport($filters), $fileName);
     }
 }

@@ -41,11 +41,13 @@ Route::middleware('auth')->group(function () {
 
     // Products (Owner only)
     Route::middleware('role:owner')->group(function () {
-        Route::resource('products', ProductController::class);
+        Route::resource('products', ProductController::class)->except(['show']);
         Route::post('/products/{id}/update-selling-price', [ProductController::class, 'updateSellingPrice'])
             ->name('products.update-selling-price');
         Route::post('/products/{id}/update-purchase-price', [ProductController::class, 'updatePurchasePrice'])
             ->name('products.update-purchase-price');
+        Route::get('/products/export', [ProductController::class, 'export'])
+            ->name('products.export');
     });
 
     // Purchases/Pembelian (Owner only)
@@ -56,6 +58,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/pembelian/{id}/edit', [ProductIncomingController::class, 'edit'])->name('pembelian.edit');
         Route::put('/pembelian/{id}', [ProductIncomingController::class, 'update'])->name('pembelian.update');
         Route::delete('/pembelian/{id}', [ProductIncomingController::class, 'destroy'])->name('pembelian.destroy');
+        Route::get('/pembelian/export', [ProductIncomingController::class, 'export'])
+            ->name('pembelian.export');
     });
 
     // Sales/Penjualan (Owner & Pegawai)
@@ -66,6 +70,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}/edit', [ProductOutgoingController::class, 'edit'])->name('penjualan.edit');
         Route::put('/{id}', [ProductOutgoingController::class, 'update'])->name('penjualan.update');
         Route::delete('/{id}', [ProductOutgoingController::class, 'destroy'])->name('penjualan.destroy');
+        Route::get('/export', [ProductOutgoingController::class, 'export'])->name('penjualan.export');
 
         // AJAX routes for penjualan
         Route::get('/get-product-details', [ProductOutgoingController::class, 'getProductDetails'])

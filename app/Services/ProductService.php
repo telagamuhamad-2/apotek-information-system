@@ -31,9 +31,9 @@ class ProductService extends BaseService
             $data['product_quantity'] = 0;
             $data['last_updated_by'] = Auth::id();
 
-            // If selling_price not set, use purchase_price as default
+            // If selling_price not set, default to 0 (must be set in Stock menu)
             if (!isset($data['selling_price'])) {
-                $data['selling_price'] = $data['purchase_price'] ?? $data['product_price'] ?? 0;
+                $data['selling_price'] = 0;
             }
 
             return parent::create($data);

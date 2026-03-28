@@ -90,22 +90,6 @@
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
-
-            <div class="md:col-span-2">
-                <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-2">
-                    <i class="fas fa-user mr-2 text-emerald-600"></i>Nama Pelanggan
-                </label>
-                <input type="text"
-                       id="customer_name"
-                       name="customer_name"
-                       value="{{ old('customer_name', $productOutgoing->customer_name) }}"
-                       required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                       placeholder="Nama pelanggan">
-                @error('customer_name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
         </div>
 
         <div class="flex justify-end space-x-4 mt-8">

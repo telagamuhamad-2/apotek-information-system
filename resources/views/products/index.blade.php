@@ -18,18 +18,10 @@
                     </p>
                 </div>
             </div>
-            <div class="flex gap-2">
-                @if(auth()->user()->hasRole('owner'))
-                    <a href="{{ route('pembelian.create') }}"
-                       class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Tambah Stok (Pembelian)
-                    </a>
-                @endif
-                <a href="{{ route('products.create') }}"
-                   class="inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
-                    <i class="fas fa-plus mr-2"></i>Tambah Obat Baru
-                </a>
-            </div>
+            <a href="{{ route('products.export', request()->query()) }}"
+               class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                <i class="fas fa-file-excel mr-2"></i>Export Excel
+            </a>
         </div>
 
         <!-- Filters -->
@@ -67,16 +59,20 @@
 
             <!-- Quick Filters -->
             <div class="mt-4 flex flex-wrap gap-2">
+                <a href="{{ route('products.index') }}"
+                   class="px-3 py-1 {{ empty(request()->except('page')) ? 'bg-blue-100 text-blue-800 border-blue-300' : 'bg-gray-100 text-gray-600 border-gray-300' }} rounded-full text-xs border hover:opacity-80">
+                    <i class="fas fa-boxes mr-1"></i>Semua Obat
+                </a>
                 <a href="{{ route('products.index', ['low_stock' => 1]) }}"
                    class="px-3 py-1 {{ request('low_stock') ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : 'bg-gray-100 text-gray-600 border-gray-300' }} rounded-full text-xs border hover:opacity-80">
                     <i class="fas fa-exclamation-triangle mr-1"></i>Stok Rendah (< 10)
                 </a>
                 <a href="{{ route('products.index', ['expired' => 1]) }}"
                    class="px-3 py-1 {{ request('expired') ? 'bg-red-100 text-red-800 border-red-300' : 'bg-gray-100 text-gray-600 border-gray-300' }} rounded-full text-xs border hover:opacity-80">
-                    <i class="fas fa-clock mr-1"></i>Kedaluwarsa
+                    <i class="fas fa-clock mr-1"></i>Kadaluwarsa
                 </a>
-                <a href="{{ route('products.index', ['search' => '']) }}"
-                   class="px-3 py-1 {{ request()->has('search') && request('search') == '' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' : 'bg-gray-100 text-gray-600 border-gray-300' }} rounded-full text-xs border hover:opacity-80">
+                <a href="{{ route('products.index', ['max_quantity' => 0]) }}"
+                   class="px-3 py-1 {{ request()->has('max_quantity') && request('max_quantity') == '0' ? 'bg-red-100 text-red-800 border-red-300' : 'bg-gray-100 text-gray-600 border-gray-300' }} rounded-full text-xs border hover:opacity-80">
                     <i class="fas fa-cube mr-1"></i>Stok Habis (0)
                 </a>
             </div>
@@ -94,7 +90,8 @@
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stok</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Beli</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Jual</th>
-                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kedaluwarsa</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kadaluwarsa</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
                     <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
             </thead>
@@ -174,6 +171,11 @@
                                 <span class="text-gray-400">-</span>
                             @endif
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs">
+                                {{ $product->vendor_name  ?? '-' }}
+                            </span>
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex justify-end space-x-2">
                                 <a href="{{ route('products.edit', $product->id) }}"
@@ -197,11 +199,6 @@
                         <td colspan="8" class="px-6 py-12 text-center text-gray-500">
                             <i class="fas fa-inbox text-4xl mb-4 text-gray-300"></i>
                             <p class="mb-2">Tidak ada obat yang ditemukan</p>
-                            @if(auth()->user()->hasRole('owner'))
-                                <a href="{{ route('products.create') }}" class="text-emerald-600 hover:text-emerald-800 text-sm">
-                                    <i class="fas fa-plus mr-1"></i>Tambah obat baru
-                                </a>
-                            @endif
                         </td>
                     </tr>
                 @endforelse

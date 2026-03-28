@@ -35,20 +35,16 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="md:col-span-2">
                 <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">
-                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Kode Obat
+                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Obat
                 </label>
-                <div class="flex gap-2">
-                    <input type="text"
-                           id="product_code"
-                           name="product_code"
-                           required
-                           autofocus
-                           class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                           placeholder="Scan atau masukkan kode obat">
-                    <button type="button" onclick="searchProduct()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
+                <select id="product_code" name="product_code" required class="w-full">
+                    <option value="">Pilih obat</option>
+                    @foreach($availableProducts as $product)
+                        @if($product->product_quantity > 0)
+                            <option value="{{ $product->product_code }}">{{ $product->product_code }} - {{ $product->product_name }}</option>
+                        @endif
+                    @endforeach
+                </select>
                 @error('product_code')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
@@ -97,22 +93,6 @@
                     <i class="fas fa-exclamation-triangle mr-1"></i>Stok tidak mencukupi
                 </p>
             </div>
-
-            <div class="md:col-span-2">
-                <label for="customer_name" class="block text-sm font-medium text-gray-700 mb-2">
-                    <i class="fas fa-user mr-2 text-emerald-600"></i>Nama Pelanggan
-                </label>
-                <input type="text"
-                       id="customer_name"
-                       name="customer_name"
-                       value="{{ old('customer_name') }}"
-                       required
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                       placeholder="Nama pelanggan">
-                @error('customer_name')
-                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
         </div>
 
         <!-- Total Calculation Preview -->
@@ -138,6 +118,44 @@
     </form>
 </div>
 
+<!-- Tambahkan library jQuery dan Selectize -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
+
+<style>
+    /* Menyamakan tampilan Selectize dengan input Tailwind bawaan Anda */
+    .selectize-control.single .selectize-input {
+        padding: 0.75rem 1rem !important; /* Menyamai class py-3 px-4 */
+        border: 1px solid #d1d5db !important; /* Menyamai class border-gray-300 */
+        border-radius: 0.5rem !important; /* Menyamai class rounded-lg */
+        box-shadow: none !important;
+        background: #fff !important;
+        font-size: 1rem !important;
+        min-height: auto !important;
+    }
+    .selectize-control.single .selectize-input.focus {
+        border-color: #10b981 !important; /* Menyamai class focus:border-emerald-500 */
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important; /* Menyamai efek focus:ring-emerald-500 */
+    }
+    .selectize-control.single .selectize-input.dropdown-active::before {
+        display: none !important;
+    }
+    .selectize-control.single .selectize-input::after {
+        right: 1.25rem !important;
+    }
+    .selectize-dropdown {
+        border: 1px solid #d1d5db !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+        margin-top: 0.25rem !important;
+    }
+    .selectize-dropdown .active {
+        background-color: #ecfdf5 !important; /* Warna highlight emerald-50 */
+        color: #065f46 !important; /* Warna teks emerald-800 */
+    }
+</style>
+
 <script>
     let currentProduct = null;
     let maxStock = 0;
@@ -146,7 +164,7 @@
         const code = document.getElementById('product_code').value.trim();
 
         if (!code) {
-            alert('Masukkan kode obat terlebih dahulu');
+            alert('Pilih obat terlebih dahulu');
             return;
         }
 
@@ -162,7 +180,8 @@
                     // Show product details
                     document.getElementById('product_details').classList.remove('hidden');
                     document.getElementById('detail_name').textContent = response.product.name;
-                    document.getElementById('detail_price').textContent = parseFloat(response.product.price).toLocaleString('id-ID');
+                    const price = parseFloat(response.product.price) || 0;
+                    document.getElementById('detail_price').textContent = price.toLocaleString('id-ID');
                     document.getElementById('detail_stock').textContent = response.product.stock + ' pcs';
                     document.getElementById('detail_type').textContent = response.product.type_name || '-';
 
@@ -197,19 +216,12 @@
 
     function calculateTotal() {
         const quantity = parseInt(document.getElementById('product_quantity').value) || 0;
-        const price = currentProduct ? parseFloat(currentProduct.price) : 0;
+        const price = currentProduct ? (parseFloat(currentProduct.price) || 0) : 0;
         const total = quantity * price;
         document.getElementById('total_price').textContent = total.toLocaleString('id-ID');
     }
 
     // Event listeners
-    document.getElementById('product_code').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            searchProduct();
-        }
-    });
-
     document.getElementById('product_quantity').addEventListener('input', function() {
         checkStock();
         calculateTotal();
@@ -219,7 +231,7 @@
     document.getElementById('saleForm').addEventListener('submit', function(e) {
         if (!currentProduct) {
             e.preventDefault();
-            alert('Cari obat terlebih dahulu dengan memasukkan kode obat');
+            alert('Cari obat terlebih dahulu dengan memasukkan kode atau nama obat');
             return;
         }
 
@@ -227,6 +239,23 @@
             e.preventDefault();
             return;
         }
+    });
+
+    // Inisialisasi Selectize
+    $(document).ready(function() {
+        $('#product_code').selectize({
+            maxOptions: 10,
+            searchField: ['text', 'value'], // Pencarian berdasarkan nama/teks dan kode/value
+            onChange: function(value) {
+                if (value) {
+                    searchProduct(); // Otomatis trigger pengecekan detail obat
+                } else {
+                    document.getElementById('product_details').classList.add('hidden');
+                    currentProduct = null;
+                    calculateTotal();
+                }
+            }
+        });
     });
 </script>
 @endsection

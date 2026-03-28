@@ -46,6 +46,7 @@ class ProductIncomingService extends BaseService
                 if (!empty($data['product_type_id'])) $product->product_type_id = $data['product_type_id'];
                 if (!empty($data['product_purpose'])) $product->product_purpose = $data['product_purpose'];
                 if (!empty($data['product_expiration_date'])) $product->product_expiration_date = $data['product_expiration_date'];
+                if (!empty($data['vendor_name'])) $product->vendor_name = $data['vendor_name'];
 
                 $product->last_updated_by = Auth::id();
                 $product->save();
@@ -57,8 +58,8 @@ class ProductIncomingService extends BaseService
                     'product_type_id' => $data['product_type_id'] ?? null,
                     'product_purpose' => $data['product_purpose'] ?? null,
                     'purchase_price' => $data['product_each_price'],
-                    'selling_price' => $data['product_each_price'], // Default to purchase price
                     'product_expiration_date' => $data['product_expiration_date'] ?? null,
+                    'vendor_name' => $data['vendor_name']
                 ];
 
                 $product = $this->productService->create($productData);
@@ -111,6 +112,7 @@ class ProductIncomingService extends BaseService
                 if (!empty($data['product_type_id'])) $product->product_type_id = $data['product_type_id'];
                 if (!empty($data['product_purpose'])) $product->product_purpose = $data['product_purpose'];
                 if (!empty($data['product_expiration_date'])) $product->product_expiration_date = $data['product_expiration_date'];
+                if (!empty($data['vendor_name'])) $product->vendor_name = $data['vendor_name'];
 
                 $product->last_updated_by = Auth::id();
                 $product->save();
