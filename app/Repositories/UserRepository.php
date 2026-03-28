@@ -26,6 +26,15 @@ class UserRepository extends BaseRepository implements UserRepositoryInterface
     {
         parent::applyFilters($query, $filters);
 
+        // Global search filter
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%");
+            });
+        }
+
         // Add role filter
         if (!empty($filters['role'])) {
             $query->whereHas('roles', function ($q) use ($filters) {

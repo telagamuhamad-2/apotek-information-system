@@ -18,21 +18,40 @@
     <form method="POST" action="{{ route('product-types.store') }}" class="p-6">
         @csrf
 
-        <div class="mb-6">
-            <label for="product_type_name" class="block text-sm font-medium text-gray-700 mb-2">
-                <i class="fas fa-tag mr-2 text-emerald-600"></i>Nama Jenis Obat
-            </label>
-            <input type="text"
-                   id="product_type_name"
-                   name="product_type_name"
-                   value="{{ old('product_type_name') }}"
-                   required
-                   autofocus
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                   placeholder="Contoh: Tablet, Sirup, Kapsul, dll">
-            @error('product_type_name')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label for="product_type_name" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-tag mr-2 text-emerald-600"></i>Nama Jenis Obat
+                </label>
+                <input type="text"
+                       id="product_type_name"
+                       name="product_type_name"
+                       value="{{ old('product_type_name') }}"
+                       required
+                       autofocus
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                       placeholder="Contoh: Tablet, Sirup, Kapsul, dll">
+                @error('product_type_name')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div>
+                <label for="product_type_prefix" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-id-card mr-2 text-emerald-600"></i>Kode Prefix (Opsional)
+                </label>
+                <input type="text"
+                       id="product_type_prefix"
+                       name="product_type_prefix"
+                       value="{{ old('product_type_prefix') }}"
+                       maxlength="10"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 uppercase"
+                       placeholder="Contoh: TBT, SRP, KPS">
+                <p class="mt-1 text-xs text-gray-500">Prefix akan digunakan untuk generate otomatis Kode Obat (e.g. TBT-0001)</p>
+                @error('product_type_prefix')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
         </div>
 
         <div class="flex justify-end space-x-4">

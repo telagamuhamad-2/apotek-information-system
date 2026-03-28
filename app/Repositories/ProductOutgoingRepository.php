@@ -16,6 +16,16 @@ class ProductOutgoingRepository extends BaseRepository implements ProductOutgoin
     {
         parent::applyFilters($query, $filters);
 
+        // Global search filter
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'LIKE', "%{$search}%")
+                  ->orWhere('product_code', 'LIKE', "%{$search}%")
+                  ->orWhere('customer_name', 'LIKE', "%{$search}%");
+            });
+        }
+
         // Add relationship filter for product_type_id
         if (!empty($filters['product_type_id'])) {
             $query->where('product_type_id', $filters['product_type_id']);

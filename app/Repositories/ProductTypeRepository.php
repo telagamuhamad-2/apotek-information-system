@@ -11,4 +11,17 @@ class ProductTypeRepository extends BaseRepository implements ProductTypeReposit
     {
         parent::__construct($model);
     }
+
+    protected function applyFilters($query, array $filters): void
+    {
+        parent::applyFilters($query, $filters);
+
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('product_type_name', 'LIKE', "%{$search}%")
+                  ->orWhere('product_type_prefix', 'LIKE', "%{$search}%");
+            });
+        }
+    }
 }

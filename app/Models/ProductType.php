@@ -14,7 +14,8 @@ class ProductType extends Model
     protected $table = 'product_types';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'product_type_name'
+        'product_type_name',
+        'product_type_prefix'
     ];
 
     public function products()

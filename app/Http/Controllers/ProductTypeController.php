@@ -44,6 +44,7 @@ class ProductTypeController extends Controller
     {
         $validated = $request->validate([
             'product_type_name' => 'required|string|max:255|unique:product_types,product_type_name',
+            'product_type_prefix' => 'nullable|string|max:10|unique:product_types,product_type_prefix',
         ]);
 
         try {
@@ -83,6 +84,7 @@ class ProductTypeController extends Controller
     {
         $validated = $request->validate([
             'product_type_name' => 'required|string|max:255|unique:product_types,product_type_name,' . $id,
+            'product_type_prefix' => 'nullable|string|max:10|unique:product_types,product_type_prefix,' . $id,
         ]);
 
         try {

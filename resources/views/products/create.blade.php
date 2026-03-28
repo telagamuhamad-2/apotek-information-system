@@ -38,7 +38,8 @@
                        name="product_code"
                        value="{{ old('product_code') }}"
                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                       placeholder="Contoh: OB001">
+                       placeholder="Kosongkan untuk generate otomatis">
+                <p class="mt-1 text-xs text-gray-500 italic">Auto-generate format: [PREFIX]-[NOMOR]</p>
                 @error('product_code')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

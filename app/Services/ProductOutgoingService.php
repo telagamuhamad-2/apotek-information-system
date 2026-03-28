@@ -19,11 +19,9 @@ class ProductOutgoingService extends BaseService
      */
     public function create(array $data)
     {
-        DB::beginTransaction();
-
-        try {
-            // Find product by code
-            $product = Product::where('product_code', $data['product_code'])->first();
+        return DB::transaction(function () use ($data) {
+            // Find product by code with lock
+            $product = Product::where('product_code', $data['product_code'])->lockForUpdate()->first();
 
             if (!$product) {
                 throw new \Exception("Obat dengan kode {$data['product_code']} tidak ditemukan!");
@@ -55,12 +53,8 @@ class ProductOutgoingService extends BaseService
             $product->last_updated_by = Auth::id();
             $product->save();
 
-            DB::commit();
             return $productOutgoing;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        });
     }
 
     /**
@@ -68,9 +62,7 @@ class ProductOutgoingService extends BaseService
      */
     public function update(int $id, array $data)
     {
-        DB::beginTransaction();
-
-        try {
+        return DB::transaction(function () use ($id, $data) {
             // Get original outgoing record
             $originalOutgoing = $this->findById($id);
 
@@ -79,14 +71,11 @@ class ProductOutgoingService extends BaseService
             }
 
             // Find product
-            $product = Product::where('product_code', $data['product_code'])->first();
+            $product = Product::where('product_code', $originalOutgoing->product_code)->lockForUpdate()->first();
 
             if (!$product) {
-                throw new \Exception("Obat dengan kode {$data['product_code']} tidak ditemukan!");
+                throw new \Exception("Obat tidak ditemukan!");
             }
-
-            // Get selling price from product
-            $sellingPrice = $product->selling_price ?? $product->product_price ?? 0;
 
             // Calculate stock adjustment
             $oldQuantity = $originalOutgoing->product_quantity;
@@ -98,8 +87,9 @@ class ProductOutgoingService extends BaseService
                 throw new \Exception("Stok tidak mencukupi! Stok tersedia setelah penyesuaian: " . ($product->product_quantity + $difference));
             }
 
-            // Calculate total price with new selling price
-            $data['product_total_price'] = $newQuantity * $data['product_each_price'];
+            // Calculate total price with provided price or product price
+            $eachPrice = $data['product_each_price'] ?? $product->selling_price;
+            $data['product_total_price'] = $newQuantity * $eachPrice;
             $data['last_updated_by'] = Auth::id();
 
             // Update outgoing record
@@ -110,12 +100,8 @@ class ProductOutgoingService extends BaseService
             $product->last_updated_by = Auth::id();
             $product->save();
 
-            DB::commit();
             return $updatedOutgoing;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new Exception("Failed to update product outgoing: " . $e->getMessage());
-        }
+        });
     }
 
     /**
@@ -123,14 +109,12 @@ class ProductOutgoingService extends BaseService
      */
     public function delete(int $id): bool
     {
-        DB::beginTransaction();
-
-        try {
+        return DB::transaction(function () use ($id) {
             $outgoing = $this->findById($id);
 
             if ($outgoing) {
                 // Revert stock change
-                $product = Product::where('product_code', $outgoing->product_code)->first();
+                $product = Product::where('product_code', $outgoing->product_code)->lockForUpdate()->first();
 
                 if ($product) {
                     $product->product_quantity += $outgoing->product_quantity;
@@ -138,17 +122,11 @@ class ProductOutgoingService extends BaseService
                     $product->save();
                 }
 
-                $result = parent::delete($id);
-                DB::commit();
-                return $result;
+                return parent::delete($id);
             }
 
-            DB::rollBack();
             return false;
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new Exception("Failed to delete product outgoing: " . $e->getMessage());
-        }
+        });
     }
 
     /**

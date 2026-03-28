@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Contracts\ProductRepositoryInterface;
+use App\Models\ProductType;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProductService extends BaseService
 {
@@ -18,17 +20,48 @@ class ProductService extends BaseService
      */
     public function create(array $data)
     {
-        // Set stock to 0 for new products
-        // Stock will be added through pembelian (purchases)
-        $data['product_quantity'] = 0;
-        $data['last_updated_by'] = Auth::id();
+        return DB::transaction(function () use ($data) {
+            // Auto generate product code if not provided
+            if (empty($data['product_code']) && !empty($data['product_type_id'])) {
+                $data['product_code'] = $this->generateProductCode($data['product_type_id']);
+            }
 
-        // If selling_price not set, use purchase_price as default
-        if (!isset($data['selling_price'])) {
-            $data['selling_price'] = $data['purchase_price'] ?? $data['product_price'] ?? 0;
+            // Set stock to 0 for new products
+            // Stock will be added through pembelian (purchases)
+            $data['product_quantity'] = 0;
+            $data['last_updated_by'] = Auth::id();
+
+            // If selling_price not set, use purchase_price as default
+            if (!isset($data['selling_price'])) {
+                $data['selling_price'] = $data['purchase_price'] ?? $data['product_price'] ?? 0;
+            }
+
+            return parent::create($data);
+        });
+    }
+
+    /**
+     * Generate product code based on type prefix and increment
+     */
+    public function generateProductCode(int $productTypeId): string
+    {
+        $productType = ProductType::lockForUpdate()->find($productTypeId);
+        $prefix = $productType->product_type_prefix ?? 'OBT'; // Default to OBT if no prefix
+        
+        $latestCode = $this->repository->getLatestCodeByType($productTypeId);
+        
+        $nextNumber = 1;
+        if ($latestCode) {
+            // Extract number from code (e.g., OBT-0001 -> 1)
+            $parts = explode('-', $latestCode);
+            $lastPart = end($parts);
+            if (is_numeric($lastPart)) {
+                $nextNumber = (int)$lastPart + 1;
+            }
         }
 
-        return parent::create($data);
+        // Format: PREFIX-0001
+        return $prefix . '-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -48,10 +81,6 @@ class ProductService extends BaseService
 
         return parent::update($id, $data);
     }
-
-    /**
-     * Update selling price only
-     */
     public function updateSellingPrice(int $id, float $price)
     {
         $data = [
@@ -60,10 +89,6 @@ class ProductService extends BaseService
         ];
         return $this->update($id, $data);
     }
-
-    /**
-     * Update purchase price only
-     */
     public function updatePurchasePrice(int $id, float $price)
     {
         $data = [

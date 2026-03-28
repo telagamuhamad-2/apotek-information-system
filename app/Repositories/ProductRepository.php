@@ -12,9 +12,31 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
         parent::__construct($model);
     }
 
+    /**
+     * Get the latest product code for a specific product type
+     */
+    public function getLatestCodeByType(int $productTypeId): ?string
+    {
+        return $this->model
+            ->where('product_type_id', $productTypeId)
+            ->whereNotNull('product_code')
+            ->orderBy('product_code', 'desc')
+            ->lockForUpdate() // Handle race condition by locking the latest product row for this type
+            ->value('product_code');
+    }
+
     protected function applyFilters($query, array $filters): void
     {
         parent::applyFilters($query, $filters);
+
+        // Global search filter
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'LIKE', "%{$search}%")
+                  ->orWhere('product_code', 'LIKE', "%{$search}%");
+            });
+        }
 
         // Add relationship filter for product_type_id
         if (!empty($filters['product_type_id'])) {
