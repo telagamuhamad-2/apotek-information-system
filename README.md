@@ -1,59 +1,106 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏥 Sistem Informasi Apotek
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Informasi Apotek adalah aplikasi berbasis web yang dirancang untuk memudahkan pengelolaan operasional apotek. Aplikasi ini mencakup manajemen inventaris obat, pencatatan transaksi pembelian (restok) dari vendor, hingga transaksi penjualan kepada pelanggan dengan antarmuka yang modern, cepat, dan ramah pengguna.
 
-## About Laravel
+Aplikasi ini dibangun menggunakan framework **Laravel** dan menggunakan **Tailwind CSS** untuk tampilan antarmuka penggunanya.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✨ Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **👥 Manajemen Pengguna & Hak Akses**
+  - Terdapat pemisahan hak akses (Role) antara **Owner** (Pemilik) dan **Pegawai** (Kasir).
+  - Owner dapat mengakses semua menu termasuk manajemen pengguna dan pembelian.
+  - Pegawai difokuskan pada transaksi penjualan.
+- **📦 Manajemen Master Data**
+  - **Jenis Obat:** Pengelolaan kategori obat (Tablet, Sirup, dll) dengan fitur *auto-prefix* untuk pembuatan kode obat otomatis (contoh: TBT-0001).
+  - **Stok Obat:** Pemantauan stok secara *real-time*. Stok akan bertambah otomatis saat ada pembelian dan berkurang otomatis saat terjadi penjualan. Terdapat peringatan untuk stok rendah dan obat kedaluwarsa.
+- **🛒 Transaksi Pembelian (Inbound)**
+  - Pencatatan pembelian obat dari vendor.
+  - Penyesuaian Harga Beli (modal) dan input Tanggal Kedaluwarsa (Expiration Date).
+- **🛍️ Transaksi Penjualan (Outbound)**
+  - Sistem Point of Sales (POS) sederhana untuk mencatat penjualan.
+  - Pencarian obat yang sangat cepat menggunakan *Selectize* (bisa dicari berdasarkan kode maupun nama obat).
+  - Validasi stok otomatis menggunakan AJAX untuk mencegah penjualan melebihi ketersediaan.
+- **📊 Laporan & Ekspor**
+  - Fitur ekspor data ke **Excel** untuk Stok Obat, Data Pembelian, dan Data Penjualan.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 💻 Teknologi yang Digunakan
 
-## Learning Laravel
+- **Backend:** [Laravel](https://laravel.com/) (PHP)
+- **Database:** MySQL / MariaDB
+- **Frontend:** HTML5, [Tailwind CSS](https://tailwindcss.com/), JavaScript, jQuery
+- **Library Tambahan:**
+  - [Selectize.js](https://selectize.dev/) (Untuk pencarian *dropdown* obat yang interaktif)
+  - [Maatwebsite Excel](https://laravel-excel.com/) (Untuk ekspor data ke Excel)
+  - FontAwesome (Untuk ikon antarmuka)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🚀 Panduan Instalasi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di mesin lokal Anda.
 
-## Laravel Sponsors
+### Prasyarat
+- PHP >= 8.1
+- Composer
+- Node.js & npm
+- MySQL / MariaDB
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Langkah-langkah
+1. **Clone repositori ini:**
+   ```bash
+   git clone https://github.com/username-anda/apotek-information-system.git
+   cd apotek-information-system
+   ```
 
-### Premium Partners
+2. **Instal dependensi PHP:**
+   ```bash
+   composer install
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+3. **Instal dependensi NPM & Build aset:**
+   ```bash
+   npm install
+   npm run build
+   ```
 
-## Contributing
+4. **Konfigurasi Environment:**
+   Salin file `.env.example` menjadi `.env` dan sesuaikan kredensial database Anda.
+   ```bash
+   cp .env.example .env
+   ```
+   Buka file `.env` dan atur bagian database:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=nama_database_apotek
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Generate Application Key:**
+   ```bash
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+6. **Jalankan Migrasi & Seeder:**
+   *(Pastikan database yang diatur di `.env` sudah dibuat)*
+   ```bash
+   php artisan migrate --seed
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+7. **Jalankan Aplikasi:**
+   ```bash
+   php artisan serve
+   ```
+   Aplikasi sekarang dapat diakses melalui `http://localhost:8000`.
 
-## Security Vulnerabilities
+## 🔐 Kredensial Default (Testing)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Jika Anda menggunakan Seeder, Anda bisa login menggunakan akun bawaan berikut:
+- **Owner:** owner@apotek.com / password: `password`
+- **Pegawai:** pegawai@apotek.com / password: `password`
 
-## License
+*(Catatan: Sesuaikan email di atas jika Anda mendefinisikan email yang berbeda pada `DatabaseSeeder.php` Anda)*
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📄 Lisensi
+
+Proyek ini bersifat *Open-Source* dan tersedia di bawah Lisensi MIT.
