@@ -22,11 +22,12 @@ class AuthController extends Controller
      */
     public function login(Request $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
+        $request->validate([
+            'username' => 'required|string',
             'password' => 'required',
         ]);
 
+        $credentials = $request->only('username', 'password');
         $remember = $request->filled('remember');
 
         if (Auth::attempt($credentials, $remember)) {
@@ -45,9 +46,9 @@ class AuthController extends Controller
         }
 
         return back()
-            ->withInput($request->only('email', 'remember'))
+            ->withInput($request->only('username', 'remember'))
             ->withErrors([
-                'email' => 'Email atau password salah.',
+                'username' => 'Username atau password salah.',
             ]);
     }
 

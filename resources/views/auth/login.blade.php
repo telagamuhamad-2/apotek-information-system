@@ -31,22 +31,22 @@
             <form method="POST" action="{{ route('login') }}">
                 @csrf
 
-                <!-- Email -->
+                <!-- Username -->
                 <div class="mb-6">
-                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                        <i class="fas fa-envelope mr-2 text-emerald-600"></i>Email
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                        <i class="fas fa-user mr-2 text-emerald-600"></i>Username
                     </label>
                     <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value="{{ old('email') }}"
+                        type="text"
+                        id="username"
+                        name="username"
+                        value="{{ old('username') }}"
                         required
                         autofocus
                         class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors"
-                        placeholder="nama@email.com"
+                        placeholder="Masukkan username"
                     >
-                    @error('email')
+                    @error('username')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
@@ -91,16 +91,6 @@
                 </button>
             </form>
 
-            <!-- Default Credentials Info -->
-            <div class="mt-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                <p class="text-xs text-emerald-800 font-semibold mb-2">
-                    <i class="fas fa-info-circle mr-1"></i> Default Login:
-                </p>
-                <p class="text-xs text-emerald-700">
-                    Owner: owner@apotek.com / password123<br>
-                    Pegawai: pegawai@apotek.com / password123
-                </p>
-            </div>
         </div>
 
         <!-- Footer -->

@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request): View
     {
-        $filters = $request->only(['name', 'email', 'role', 'search']);
+        $filters = $request->only(['name', 'username', 'role', 'search']);
         $perPage = $request->get('per_page', 10);
 
         $users = $this->userService->getPaginated($perPage, $filters);
@@ -44,7 +44,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:owner,pegawai',
         ]);
@@ -86,7 +86,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'username' => 'required|string|max:255|unique:users,username,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
             'role' => 'required|in:owner,pegawai',
         ]);

@@ -12,26 +12,24 @@ class UserSeeder extends Seeder
     {
         // Create default owner
         $owner = User::firstOrCreate(
-            ['email' => 'owner@apotek.com'],
+            ['username' => 'admin'],
             [
-                'name' => 'Owner Apotek',
-                'password' => Hash::make('password123'),
+                'name' => 'Admin Apotek',
+                'password' => Hash::make('AdminApotik123'),
             ]
         );
         $owner->assignRole('owner');
 
         // Create default pegawai
         $pegawai = User::firstOrCreate(
-            ['email' => 'pegawai@apotek.com'],
+            ['username' => 'ArRumFarma'],
             [
-                'name' => 'Pegawai Apotek',
-                'password' => Hash::make('password123'),
+                'name' => 'ArRumFarma',
+                'password' => Hash::make('ApotikArRum123'),
             ]
         );
         $pegawai->assignRole('pegawai');
 
         $this->command->info('Default users seeded successfully!');
-        $this->command->info('Owner: owner@apotek.com / password123');
-        $this->command->info('Pegawai: pegawai@apotek.com / password123');
     }
 }

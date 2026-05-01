@@ -129,14 +129,37 @@
 
         <!-- Logout -->
         <div class="p-4 border-t border-emerald-600">
-            <form action="{{ route('logout') }}" method="POST">
+            <button type="button"
+                    onclick="document.getElementById('logout-modal').classList.remove('hidden')"
+                    class="w-full flex items-center px-4 py-3 rounded-lg text-emerald-100 hover:bg-white/10 hover:text-white transition-colors duration-200">
+                <i class="fas fa-sign-out-alt w-5"></i>
+                <span class="ml-3">Logout</span>
+            </button>
+        </div>
+    </div>
+</aside>
+
+<!-- Logout Confirmation Modal -->
+<div id="logout-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-xl shadow-xl p-6 w-full max-w-sm mx-4">
+        <div class="flex items-center justify-center w-14 h-14 bg-red-100 rounded-full mx-auto mb-4">
+            <i class="fas fa-sign-out-alt text-2xl text-red-600"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-800 text-center mb-2">Konfirmasi Logout</h3>
+        <p class="text-sm text-gray-500 text-center mb-6">Apakah Anda yakin ingin keluar dari sistem?</p>
+        <div class="flex gap-3">
+            <button type="button"
+                    onclick="document.getElementById('logout-modal').classList.add('hidden')"
+                    class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium">
+                Batal
+            </button>
+            <form action="{{ route('logout') }}" method="POST" class="flex-1">
                 @csrf
                 <button type="submit"
-                        class="w-full flex items-center px-4 py-3 rounded-lg text-emerald-100 hover:bg-white/10 hover:text-white transition-colors duration-200">
-                    <i class="fas fa-sign-out-alt w-5"></i>
-                    <span class="ml-3">Logout</span>
+                        class="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium">
+                    Ya, Logout
                 </button>
             </form>
         </div>
     </div>
-</aside>
+</div>
