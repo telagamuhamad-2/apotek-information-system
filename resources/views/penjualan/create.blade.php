@@ -31,8 +31,27 @@
 
     <form method="POST" action="{{ route('penjualan.store') }}" id="saleForm" class="p-6">
         @csrf
-
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Nama Pasien
+                </label>
+                <input type="text"
+                       
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                       >
+            </div>
+            
+            <div>
+                <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">
+                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Alamat Pasien
+                </label>
+                <input type="text"
+                       
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                       >
+            </div>
             <div class="md:col-span-2">
                 <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">
                     <i class="fas fa-barcode mr-2 text-emerald-600"></i>Obat

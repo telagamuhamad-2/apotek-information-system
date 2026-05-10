@@ -22,7 +22,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">
-                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Kode Obat
+                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Nama Vendor
                 </label>
                 <input type="text"
                        id="product_code"
@@ -123,7 +123,7 @@
 
             <div class="md:col-span-2">
                 <label for="vendor_name" class="block text-sm font-medium text-gray-700 mb-2">
-                    <i class="fas fa-store mr-2 text-emerald-600"></i>Nama Vendor
+                    <i class="fas fa-store mr-2 text-emerald-600"></i>Nama Distributor
                 </label>
                 <input type="text"
                        id="vendor_name"
@@ -131,7 +131,7 @@
                        value="{{ old('vendor_name', $productIncoming->vendor_name) }}"
                        required
                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                       placeholder="Nama vendor/distributor">
+                       placeholder="Nama distributor">
                 @error('vendor_name')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror

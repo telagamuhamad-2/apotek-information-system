@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Pembelian')
+@section('title', 'Faktur Pembelian')
 
-@section('header-title', 'Pembelian')
+@section('header-title', 'Faktur Pembelian')
 
 @section('content')
 <div class="bg-white rounded-xl shadow-sm">
@@ -12,8 +12,8 @@
             <div class="flex items-center">
                 <i class="fas fa-truck text-2xl text-emerald-600 mr-3"></i>
                 <div>
-                    <h2 class="text-xl font-semibold text-gray-800">Daftar Pembelian Obat</h2>
-                    <p class="text-sm text-gray-500 mt-1">Harga beli (modal) terpisah dari harga jual</p>
+                    <h2 class="text-xl font-semibold text-gray-800">Faktur Pembelian</h2>
+                    
                 </div>
             </div>
             <div class="flex gap-2">
@@ -69,10 +69,13 @@
             <thead class="bg-gray-50">
                 <tr>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Obat</th>
-                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vendor</th>
-                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jml</th>
-                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Beli/Pcs</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Po distributor</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. Pemesanan</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Distributor</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Obat</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Obat</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jumlah</th>
+                    <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga Beli</th>
                     <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Beli</th>
                     <th class="px-6 py-4 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                 </tr>
@@ -80,10 +83,22 @@
             <tbody class="divide-y divide-gray-200">
                 @forelse($productIncomings as $purchase)
                     <tr class="hover:bg-gray-50 transition-colors">
+                        <
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{ $purchase->created_at->format('d M Y') }}
                             <br>
                             <span class="text-xs">{{ $purchase->created_at->format('H:i') }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> 
+
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> 
+
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs">
+                                {{ $purchase->vendor_name }}
+                            </span>
                         </td>
                         <td class="px-6 py-4">
                             <div>
@@ -91,13 +106,11 @@
                                 <p class="text-xs text-gray-500">{{ $purchase->product_code ?? '-' }}</p>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs">
-                                {{ $purchase->vendor_name }}
-                            </span>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"> 
+
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {{ $purchase->product_quantity }} pcs
+                            {{ $purchase->product_quantity }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ number_format($purchase->product_each_price, 0, ',', '.') }}

@@ -55,7 +55,7 @@
 
                         <a href="{{ route('pembelian.index') }}"
                            class="flex items-center px-4 py-2 rounded-lg text-sm transition-colors duration-200 {{ request()->routeIs('pembelian.*') ? 'text-white font-medium' : 'text-emerald-200 hover:text-white' }}">
-                            <span>Pembelian</span>
+                            <span>Faktur Pembelian</span>
                         </a>
                     </div>
                 </div>

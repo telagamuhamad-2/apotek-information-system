@@ -27,7 +27,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="product_code" class="block text-sm font-medium text-gray-700 mb-2">
-                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Kode Obat
+                    <i class="fas fa-barcode mr-2 text-emerald-600"></i>Produksi Vendor
                 </label>
                 <input type="text"
                        id="product_code"
@@ -151,6 +151,7 @@
                 @enderror
             </div>
 
+            <!-- Tanggal Kedaluwarsa -->
             <div>
                 <label for="product_expiration_date" class="block text-sm font-medium text-gray-700 mb-2">
                     <i class="fas fa-calendar-alt mr-2 text-emerald-600"></i>Tanggal Kedaluwarsa
@@ -158,7 +159,7 @@
                 <input type="date"
                        id="product_expiration_date"
                        name="product_expiration_date"
-                       value="{{ old('product_expiration_date', $product->product_expiration_date ? $product->product_expiration_date->format('Y-m-d') : '') }}"
+                       
                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500">
                 @error('product_expiration_date')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
